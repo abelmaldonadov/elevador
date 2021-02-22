@@ -2,7 +2,7 @@ const app = new Vue({
     el: '#app',
     data: {
         estado: {msg: 'Correcto', color: 'text-success', valor: true},
-        noAuto: {src: 'autos/0-min.png', ini: {}, fin: {}},
+        noAuto: {src: 'assets/fotosAutos/0-min.png', ini: {}, fin: {}},
         t: 250,
 
         numPisos: 2,
@@ -45,14 +45,15 @@ const app = new Vue({
             // IR DE LA POSICION INICIAL A LA POSICION DESTINO
             console.log(auto)
             const move = setInterval(() => {
-                if (auto.pos.y > auto.des.y) {
-                    this.irAbajo(auto)
-                } else if (auto.pos.y < auto.des.y) {
-                    this.irArriba(auto)
-                } else if (auto.pos.x > auto.des.x) {
+                
+                if (auto.pos.x > auto.des.x) {
                     this.irIzquierda(auto)
                 } else if (auto.pos.x < auto.des.x) {
                     this.irDerecha(auto)
+                }else if (auto.pos.y > auto.des.y) {
+                        this.irAbajo(auto)
+                } else if (auto.pos.y < auto.des.y) {
+                        this.irArriba(auto)
                 } else {
                     this.estado = {msg: 'Correcto', color: 'text-success', valor: true}
                     console.log(this.posiciones)
@@ -94,40 +95,55 @@ const app = new Vue({
         },
         ordenarAutos() {
             this.estado = {msg: 'Por favor espere...', color: 'text-warning', valor: false}
-            console.log('------')
-            
             const paso = setInterval(() => {
-
                 let i = 0
                 auto: for (auto of this.autosEstacionados) {
-
-                    console.log('auto evaluado => y: '+auto.pos.y +', x: '+ auto.pos.x)
-
-                    if (this.posiciones.lib.map(coo => coo.y+' '+coo.x).indexOf((parseInt(auto.pos.y)+1)+' '+auto.pos.x) != -1) {
-                        this.irArriba(auto)
-                        console.log(i+': subir')
+                    if (this.posiciones.lib.map(coo => coo.y+' '+coo.x).indexOf(auto.pos.y+' '+(parseInt(auto.pos.x)+1)) != -1) {   // HORIZONTAL
+                        this.irDerecha(auto)
                         break auto
                     } else {
-                        if (this.posiciones.lib.map(coo => coo.y+' '+coo.x).indexOf(auto.pos.y+' '+(parseInt(auto.pos.x)+1)) != -1) {
-                            this.irDerecha(auto)
-                            console.log(i+': derecha')
+                        if (this.posiciones.lib.map(coo => coo.y+' '+coo.x).indexOf((parseInt(auto.pos.y)+1)+' '+auto.pos.x) != -1) {   // VERTICAL
+                            this.irArriba(auto)
                             break auto
                         } else {
                             if (i == this.autosEstacionados.length - 1) {
-                                console.log('------')
                                 this.estado = {msg: 'Correcto', color: 'text-success', valor: true}
                                 clearInterval(paso)
                                 break auto
                             }else {
-                                console.log('siguinete auto')
                                 i++
                                 continue auto
                             }
                         }
                     }
                 }
-
-            }, 3*this.t);
+            }, 2*this.t);
+        },
+        rotarAutos() {
+            this.estado = {msg: 'Por favor espere...', color: 'text-warning', valor: false}
+            const paso = setInterval(() => {
+                let i = 0
+                auto: for (auto of this.autosEstacionados) {
+                    if (this.posiciones.lib.map(coo => coo.y+' '+coo.x).indexOf(auto.pos.y+' '+(parseInt(auto.pos.x)+1)) != -1) {   // HORIZONTAL
+                        this.irDerecha(auto)
+                        break auto
+                    } else {
+                        if (this.posiciones.lib.map(coo => coo.y+' '+coo.x).indexOf((parseInt(auto.pos.y)+1)+' '+auto.pos.x) != -1) {   // VERTICAL
+                            this.irArriba(auto)
+                            break auto
+                        } else {
+                            if (i == this.autosEstacionados.length - 1) {
+                                this.estado = {msg: 'Correcto', color: 'text-success', valor: true}
+                                clearInterval(paso)
+                                break auto
+                            }else {
+                                i++
+                                continue auto
+                            }
+                        }
+                    }
+                }
+            }, 2*this.t);
         }
     },
     computed: {

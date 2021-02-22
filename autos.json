@@ -1,9 +1,9 @@
 [
-    {"src": "autos/1-min.png", "pos": null, "des": null},
-    {"src": "autos/2-min.png", "pos": null, "des": null},
-    {"src": "autos/3-min.png", "pos": null, "des": null},
-    {"src": "autos/4-min.png", "pos": null, "des": null},
-    {"src": "autos/5-min.png", "pos": null, "des": null},
-    {"src": "autos/6-min.png", "pos": null, "des": null},
-    {"src": "autos/7-min.png", "pos": null, "des": null}
+    {"src": "assets/fotosAutos/1-min.png", "pos": null, "des": null},
+    {"src": "assets/fotosAutos/2-min.png", "pos": null, "des": null},
+    {"src": "assets/fotosAutos/3-min.png", "pos": null, "des": null},
+    {"src": "assets/fotosAutos/4-min.png", "pos": null, "des": null},
+    {"src": "assets/fotosAutos/5-min.png", "pos": null, "des": null},
+    {"src": "assets/fotosAutos/6-min.png", "pos": null, "des": null},
+    {"src": "assets/fotosAutos/7-min.png", "pos": null, "des": null}
 ]
