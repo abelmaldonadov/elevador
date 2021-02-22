@@ -99,7 +99,6 @@ const app = new Vue({
             const paso = setInterval(() => {
 
                 let i = 0
-                // auto: for (let i = 0; i < this.autosEstacionados.length; i++) {
                 auto: for (auto of this.autosEstacionados) {
 
                     console.log('auto evaluado => y: '+auto.pos.y +', x: '+ auto.pos.x)
