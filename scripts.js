@@ -2,7 +2,7 @@ const app = new Vue({
     el: '#app',
     data: {
         estado: {msg: 'Correcto', color: 'text-success', valor: true},
-        noAuto: {src: 'assets/fotosAutos/0-min.png', ini: {}, fin: {}},
+        noAuto: {src: 'assets/stop-min.jpg', ini: {}, fin: {}},
         t: 250,
 
         numPisos: 2,
@@ -36,7 +36,8 @@ const app = new Vue({
             this.estado = {msg: 'Por favor espere...', color: 'text-warning', valor: false}
             this.autoSaliente.des = {    // ASIGNAR COORDENADAS DESTINO
                 y: 1,   // REGRESAR AL PRIMER PISO
-                x: this.posiciones.lib[0].x
+                // x: this.posiciones.lib[0].x
+                x: this.autoSaliente.pos.x
             }
 
             this.trasladarOut(this.autoSaliente)    // TRASLADAR
@@ -170,9 +171,6 @@ const app = new Vue({
             }else {
                 return this.noAuto
             }
-        },
-        numEstacionados() {     // NÚMERO DE AUTOS ESTACIONADOS
-            return this.autosEstacionados.length
         },
         posSelecionada() {      // OBTIENE LA POSICION EN NUM CELDA Y PISO SELECCIONADA POR EL USUARIO
             return {y: this.piso, x: this.celda}

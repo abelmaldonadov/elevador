@@ -17,45 +17,63 @@
     <section id="app">
 
         <div class="container pt-5">
-            <div class="elevador bg-info">
+            <div class="elevador rounded">
 
-                <div class="celda p-3 bg-light" v-for="(auto, i) of autosEstacionados" :class="['y-'+auto.pos.y, 'x-'+auto.pos.x]">
+                <div class="celda rounded p-5" v-for="(auto, i) of autosEstacionados" :class="['y-'+auto.pos.y, 'x-'+auto.pos.x]">
                     <div>
-                        <img :src="auto.src" width="100%"></img>
+                        <img class="rounded" :src="auto.src" width="100%"></img>
                     </div>
                 </div>
 
             </div>
         </div>
 
-        <main class="container fixed-bottom">
-            <div class="row bg-light">
+        <main class="container fixed-bottom pb-3">
+            <div class="row dashboard rounded">
                 
-                <div class="col-md-4 p-5">
-                    <div class="autoEspera">
-                        <img :src="autoEnEspera.src"></img>
+                <div class="col-md-4 p-5 d-grid gap-2">
+                    <h3 class="mb-3">Cámara</h3>
+                    <div class="rounded p-3 bg-dark autoEspera w-100 h-100 d-flex justify-content-center align-items-center">
+                        <img class="rounded" :src="autoEnEspera.src"></img>
                     </div>
-                    <hr>
-                    <p v-if="autosLibres.length > 0" class="text-success text-center">Nuevo auto en espera...</p>
-                    <p v-else="" class="text-danger text-center">Parking lleno...</p>
                 </div>
                 
-                <div class="col-md-4 p-5">
-                    <h3>Tablero</h3>
-                    <label>Contador</label>
-                    <input type="text" v-model="numEstacionados" readonly><hr>
-                    <label>Auto seleccionado</label><br>
-                    <label>Celda</label>
-                    <input type="number" v-model="celda" min="1" max="4">
-                    <label>Piso</label>
-                    <input type="number" v-model="piso" min="1" max="2"><hr>
-                    <label>Retroalimentación</label>
-                    <input type="text" v-model="estado.msg" :class="estado.color" readonly>
+                <div class="col-md-4 p-5 d-grid gap-2">
+                    <h3 class="mb-3">Tablero</h3>
+                    <div class="input-group input-group-sm mb-3">
+                        <label class="input-group-text w-50">Autos estacio.</label>
+                        <input class="form-control bg-white" type="text" v-model="posiciones.ocu.length" readonly>
+                    </div>
+                    <div class="input-group input-group-sm mb-3">
+                        <label class="input-group-text w-50">Celdas libres</label>
+                        <input class="form-control bg-white" type="text" v-model="posiciones.lib.length" readonly>
+                    </div>
+                    <textarea rows="3" class="form-control bg-white mb-3" type="text" v-model="estado.msg" :class="estado.color" readonly></textarea>
+
+                    <div class="progress">
+                        <div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
+                    </div>
                 </div>
                 
                 <div class="col-md-4 p-5 d-grid gap-2">
                     <h3>Controles</h3>
+                    <!-- SELECTORES DE PISO Y CELDA -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="input-group input-group-sm">
+                                <label class="input-group-text w-50">Piso</label>
+                                <input class="form-control" type="number" v-model="piso" min="1" max="2">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="input-group input-group-sm">
+                                <label class="input-group-text w-50">Celda</label>
+                                <input class="form-control" type="number" v-model="celda" min="1" max="4">
+                            </div>
+                        </div>
+                    </div>
 
+                    <!-- BOTONES DE ACCION -->
                     <button class="btn btn-danger" 
                             :class="(estado.valor && posiciones.lib.length > 1 && !autoSaliente && posSelecionada.y == 1) ? '' : 'disabled'" 
                             @click="estacionarAuto">Estacionar</button>

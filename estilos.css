@@ -1,10 +1,16 @@
 .elevador{
+    background-image: url("assets/fondo-min.jpg");
+    background-size: cover;
+
     position: relative;
     margin: auto;
     height: 500px;
     width: 1000px;
 }
 .celda{
+    background-image: url("assets/celda-min.jpg");
+    background-size: contain;
+
     position: absolute;
     
     /* SUMAN 1/5 DE 1000 Y 1/2 DE 500 */
@@ -17,6 +23,16 @@
 
     /* EL TRASLADO VERTICAL VA DE 0% 50% */
     bottom: 0%;
+}
+.dashboard{
+    background-image: url("assets/control-min.jpg");
+    background-size: cover;
+
+    margin: auto;
+    width: 1000px;
+}
+.dashboard > div{
+    background-color: rgba(255, 255, 255, 0.4);
 }
 
 /* POSICIONES */
