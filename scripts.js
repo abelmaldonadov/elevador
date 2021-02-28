@@ -9,6 +9,7 @@ const app = new Vue({
         numCeldas: 4,
         piso: 1,
         celda: 1,
+        progreso: 100,
 
         autos: [],
         autosLibres: [],
@@ -17,6 +18,7 @@ const app = new Vue({
     methods: {
         estacionarAuto() {
             this.estado = {msg: 'Por favor espere...', color: 'text-warning', valor: false}
+
             this.autoEnEspera.pos = {    // ASIGNAR POSICION INICIAL
                 y: this.posSelecionada.y, 
                 x: this.posSelecionada.x
@@ -34,6 +36,7 @@ const app = new Vue({
         },
         extraerAuto() {
             this.estado = {msg: 'Por favor espere...', color: 'text-warning', valor: false}
+            
             this.autoSaliente.des = {    // ASIGNAR COORDENADAS DESTINO
                 y: 1,   // REGRESAR AL PRIMER PISO
                 // x: this.posiciones.lib[0].x
@@ -45,16 +48,16 @@ const app = new Vue({
         trasladarIn(auto) {
             // IR DE LA POSICION INICIAL A LA POSICION DESTINO
             console.log(auto)
+
             const move = setInterval(() => {
-                
                 if (auto.pos.x > auto.des.x) {
                     this.irIzquierda(auto)
                 } else if (auto.pos.x < auto.des.x) {
                     this.irDerecha(auto)
                 }else if (auto.pos.y > auto.des.y) {
-                        this.irAbajo(auto)
+                    this.irAbajo(auto)
                 } else if (auto.pos.y < auto.des.y) {
-                        this.irArriba(auto)
+                    this.irArriba(auto)
                 } else {
                     this.estado = {msg: 'Correcto', color: 'text-success', valor: true}
                     console.log(this.posiciones)
@@ -78,6 +81,7 @@ const app = new Vue({
                     this.autosLibres.push(this.autosEstacionados.splice(this.autosEstacionados.indexOf(auto),1)[0])      // EXTRAER Y EMPUJAR A AUTOS LIBRES NUEVAMENTE
                     this.estado = {msg: 'Correcto', color: 'text-success', valor: true}
                     console.log(this.posiciones)
+                    this.ordenarAutos()
                     clearInterval(move)
                 }
             }, this.t);
@@ -98,7 +102,7 @@ const app = new Vue({
             this.estado = {msg: 'Por favor espere...', color: 'text-warning', valor: false}
             const paso = setInterval(() => {
                 let i = 0
-                auto: for (auto of this.autosEstacionados) {
+                auto: for (const auto of this.autosEstacionados) {
                     if (this.posiciones.lib.map(coo => coo.y+' '+coo.x).indexOf(auto.pos.y+' '+(parseInt(auto.pos.x)+1)) != -1) {   // HORIZONTAL
                         this.irDerecha(auto)
                         break auto
@@ -120,31 +124,57 @@ const app = new Vue({
                 }
             }, 2*this.t);
         },
-        rotarAutos() {
-            this.estado = {msg: 'Por favor espere...', color: 'text-warning', valor: false}
-            const paso = setInterval(() => {
-                let i = 0
-                auto: for (auto of this.autosEstacionados) {
-                    if (this.posiciones.lib.map(coo => coo.y+' '+coo.x).indexOf(auto.pos.y+' '+(parseInt(auto.pos.x)+1)) != -1) {   // HORIZONTAL
-                        this.irDerecha(auto)
-                        break auto
-                    } else {
-                        if (this.posiciones.lib.map(coo => coo.y+' '+coo.x).indexOf((parseInt(auto.pos.y)+1)+' '+auto.pos.x) != -1) {   // VERTICAL
-                            this.irArriba(auto)
-                            break auto
-                        } else {
-                            if (i == this.autosEstacionados.length - 1) {
-                                this.estado = {msg: 'Correcto', color: 'text-success', valor: true}
-                                clearInterval(paso)
-                                break auto
-                            }else {
-                                i++
-                                continue auto
-                            }
-                        }
-                    }
-                }
-            }, 2*this.t);
+        trasladarIzquierda() {
+            if (!this.hayAutoIzquierda) {
+                this.estado = {msg: 'Por favor espere...', color: 'text-warning', valor: false}
+                let index = this.posiciones.ocu.map(coo => coo.y+' '+coo.x).indexOf(this.posSelecionada.y+' '+this.posSelecionada.x)
+                console.log(index)
+                let auto = this.autosEstacionados[index]
+                setTimeout(() => {
+                    console.log(auto)
+                    this.irIzquierda(auto)
+                    this.estado = {msg: 'Correcto', color: 'text-success', valor: true}
+                }, 2*this.t);
+            }
+        },
+        trasladarDerecha() {
+            if (!this.hayAutoDerecha) {
+                this.estado = {msg: 'Por favor espere...', color: 'text-warning', valor: false}
+                let index = this.posiciones.ocu.map(coo => coo.y+' '+coo.x).indexOf(this.posSelecionada.y+' '+this.posSelecionada.x)
+                console.log(index)
+                let auto = this.autosEstacionados[index]
+                setTimeout(() => {
+                    console.log(auto)
+                    this.irDerecha(auto)
+                    this.estado = {msg: 'Correcto', color: 'text-success', valor: true}
+                }, 2*this.t);
+            }
+        },
+        trasladarArriba() {
+            if (!this.hayAutoArriba) {
+                this.estado = {msg: 'Por favor espere...', color: 'text-warning', valor: false}
+                let index = this.posiciones.ocu.map(coo => coo.y+' '+coo.x).indexOf(this.posSelecionada.y+' '+this.posSelecionada.x)
+                console.log(index)
+                let auto = this.autosEstacionados[index]
+                setTimeout(() => {
+                    console.log(auto)
+                    this.irArriba(auto)
+                    this.estado = {msg: 'Correcto', color: 'text-success', valor: true}
+                }, 2*this.t);
+            }
+        },
+        trasladarAbajo() {
+            if (!this.hayAutoAbajo) {
+                this.estado = {msg: 'Por favor espere...', color: 'text-warning', valor: false}
+                let index = this.posiciones.ocu.map(coo => coo.y+' '+coo.x).indexOf(this.posSelecionada.y+' '+this.posSelecionada.x)
+                console.log(index)
+                let auto = this.autosEstacionados[index]
+                setTimeout(() => {
+                    console.log(auto)
+                    this.irAbajo(auto)
+                    this.estado = {msg: 'Correcto', color: 'text-success', valor: true}
+                }, 2*this.t);
+            }
         }
     },
     computed: {
@@ -173,7 +203,7 @@ const app = new Vue({
             }
         },
         posSelecionada() {      // OBTIENE LA POSICION EN NUM CELDA Y PISO SELECCIONADA POR EL USUARIO
-            return {y: this.piso, x: this.celda}
+            return {y: parseInt(this.piso), x: parseInt(this.celda)}
         },
         posiciones() {          // OBTIENE LAS POSICIONES LIBRES Y LAS POSICIONES OCUPADAS EN EL ESTACIONAMIENTO
             let coordenadas = [{y:1,x:1},{y:1,x:2},{y:1,x:3},{y:1,x:4},{y:2,x:1},{y:2,x:2},{y:2,x:3},{y:2,x:4}]
@@ -184,6 +214,54 @@ const app = new Vue({
             }
             posiciones.lib = coordenadas
             return posiciones
+        },
+        hayAutoIzquierda() {
+            let coordenadas = [{y:1,x:1},{y:1,x:2},{y:1,x:3},{y:1,x:4},{y:2,x:1},{y:2,x:2},{y:2,x:3},{y:2,x:4}]
+            for (const i of this.autosEstacionados) {   // RETIRO LAS POSICIONES OCUPADAS AL TOTAL DE POSICIONES
+                let index = coordenadas.map(coo => coo.y+' '+coo.x).indexOf(i.pos.y+' '+i.pos.x)
+                coordenadas.splice(index,1)[0]
+            }
+            if (coordenadas.map(coo => coo.y+' '+coo.x).indexOf(this.posSelecionada.y+' '+(this.posSelecionada.x - 1)) != -1) {
+                return false    // LA CELDA ESTÁ VACIA
+            } else {
+                return true
+            }
+        },
+        hayAutoDerecha() {
+            let coordenadas = [{y:1,x:1},{y:1,x:2},{y:1,x:3},{y:1,x:4},{y:2,x:1},{y:2,x:2},{y:2,x:3},{y:2,x:4}]
+            for (const i of this.autosEstacionados) {   // RETIRO LAS POSICIONES OCUPADAS AL TOTAL DE POSICIONES
+                let index = coordenadas.map(coo => coo.y+' '+coo.x).indexOf(i.pos.y+' '+i.pos.x)
+                coordenadas.splice(index,1)[0]
+            }
+            if (coordenadas.map(coo => coo.y+' '+coo.x).indexOf(this.posSelecionada.y+' '+(this.posSelecionada.x + 1)) != -1) {
+                return false    // LA CELDA ESTÁ VACIA
+            } else {
+                return true
+            }
+        },
+        hayAutoArriba() {
+            let coordenadas = [{y:1,x:1},{y:1,x:2},{y:1,x:3},{y:1,x:4},{y:2,x:1},{y:2,x:2},{y:2,x:3},{y:2,x:4}]
+            for (const i of this.autosEstacionados) {   // RETIRO LAS POSICIONES OCUPADAS AL TOTAL DE POSICIONES
+                let index = coordenadas.map(coo => coo.y+' '+coo.x).indexOf(i.pos.y+' '+i.pos.x)
+                coordenadas.splice(index,1)[0]
+            }
+            if (coordenadas.map(coo => coo.y+' '+coo.x).indexOf((this.posSelecionada.y + 1)+' '+this.posSelecionada.x) != -1) {
+                return false    // LA CELDA ESTÁ VACIA
+            } else {
+                return true
+            }
+        },
+        hayAutoAbajo() {
+            let coordenadas = [{y:1,x:1},{y:1,x:2},{y:1,x:3},{y:1,x:4},{y:2,x:1},{y:2,x:2},{y:2,x:3},{y:2,x:4}]
+            for (const i of this.autosEstacionados) {   // RETIRO LAS POSICIONES OCUPADAS AL TOTAL DE POSICIONES
+                let index = coordenadas.map(coo => coo.y+' '+coo.x).indexOf(i.pos.y+' '+i.pos.x)
+                coordenadas.splice(index,1)[0]
+            }
+            if (coordenadas.map(coo => coo.y+' '+coo.x).indexOf((this.posSelecionada.y - 1)+' '+this.posSelecionada.x) != -1) {
+                return false    // LA CELDA ESTÁ VACIA
+            } else {
+                return true
+            }
         }
     },
     created() {
